@@ -1,5 +1,5 @@
 # Ignore everything in this directory
 *
 # Except this file
+!Armas_Policias_Mexico.csv
 !.gitignore
-!limpieza_datos_python/
