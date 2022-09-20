@@ -99,7 +99,6 @@ if __name__ == "__main__":
         INNESESARY_COLUMNS = ('Usuario_agencia_estatal', 'Usuario_municipal?', 'Mes', 'Dia', 'Ano', 'Factura no.', 'Semi_auto_auto_n_a', 'Comentario')
         clean_dataset = decrease_dimensionality(DATASET, INNESESARY_COLUMNS)
         log.info('Dataset %s reducido correctamente', FILENAME + '.csv', extra={'section': 'Main'})
-        print(clean_dataset[:50])
     except ValueError as e:
         log.error('Verifica el valor %s en "INNESESARY_COLUMNS"', e, extra={'section': 'decrease_dimensionality'})
         print('Error: ', e)
