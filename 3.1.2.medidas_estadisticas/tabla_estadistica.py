@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
+import os
 
 DATOS = pd.read_csv("Armas_Policias_Mexico_clean.csv")
 print(DATOS.columns)
@@ -80,7 +81,7 @@ def get_column_Marca():
 
 
 def get_column_No_piezas():
-    """Working ..."""
+    """"""
     global DATOS
     piezas = DATOS['No_piezas']
     value = piezas;value.dropna(inplace=True)
@@ -105,7 +106,7 @@ def get_column_No_piezas():
 
 
 def get_column_Costo_Pesos_Mex():
-    """Working ..."""
+    """"""
     global DATOS
     piezas = DATOS['Costo_Pesos_Mex']
     piezas.dropna(inplace=True)
@@ -125,9 +126,15 @@ def get_column_Costo_Pesos_Mex():
     media = sum(clean_piezas) / len(clean_piezas)
 
     data = pd.DataFrame({'Rango':aux_dict, 'Frecuencia_absoluta': frecuencia_absoluta.values(), 'Frecuencia_relativa': frecuencia_relativa.values()})
-    
+    save_to_csv(data, 'Costo_Persos_table')
     print(data)
     print('\nModa: ', moda)
     print('Media: ', media)
 
-get_column_Costo_Pesos_Mex()
+def save_to_csv(data:pd.DataFrame, name:str, ruta:str=None) -> None:
+    """"""
+    name = name if '.csv' in name else name + '.csv'
+    if ruta is not None:
+        data.to_csv(os.path.join(ruta, name))
+    else:
+        data.to_csv(name)
