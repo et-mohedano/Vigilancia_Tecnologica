@@ -1,4 +1,4 @@
-# Resitorio de código para el diplomado de Vigilancia Tecnológica
+# Repositorio de código para el diplomado de Vigilancia Tecnológica
 
 En este repositorio se encuentran los códigos mencionados en el diplomado, separados por cada subtema correspondiente
 
@@ -6,7 +6,8 @@ En este repositorio se encuentran los códigos mencionados en el diplomado, sepa
 
 Se debe tener instalado:
 
-Python 3.X
+Python 3.X\
+[Guía de instalación](https://docs.aws.amazon.com/es_es/elasticbeanstalk/latest/dg/eb-cli3-install-windows.html)
 
 ## Scripts disponibles
 
