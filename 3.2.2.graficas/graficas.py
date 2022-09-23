@@ -10,11 +10,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import operator
 
-#   datos[["Estado","Usuario_agencia_estatal", "Usuario_municipal", "Fecha", "Mes", "Ano",
-#           "Factura_no", "Marca", "Pais_origen_empresa", "No_piezas", "Costo_Pesos_Mex",
-#           "Calibre", "Semi_auto_auto_n_a", "Tipo", "Comentario"]]
-
-
 colors  = ['#ff9999','#66b3ff','#99ff99','#ffcc99','#ffffb6','#ffd1df','#017a79','#ceb301','#516572','#e17701','#d5869d','#82cbb2']
 colors2 = ['#017a79','#ceb301','#516572','#e17701','#d5869d','#82cbb2','#cf524e','#cb0162','#cb6843','#ffb2d0','#e50000','#c65102']
 colors3 = ['#cf524e','#cb0162','#cb6843','#ffb2d0','#e50000','#c65102','#ff9999','#66b3ff','#99ff99','#ffcc99','#ffffb6','#ffd1df']
