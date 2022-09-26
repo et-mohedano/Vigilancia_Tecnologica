@@ -1,108 +1,100 @@
+# Cargar liberias
+# Libreria para manipular dataframes
 import pandas as pd
-import logging
-import datetime as dt
+#Libreria para graficar
+import matplotlib.pyplot as plt
+# Libreria para control de alertas
+import warnings
+# Libreria para indices en diccionarios
+import operator
+# Libreria de utilidades para fechas
+import calendar
+# Evitar warmings
+warnings.filterwarnings('ignore')
 
-def set_logging_configuration():
-    """
-    Returns the logger with the initial configurations, used for write log file.
-
-        Parameters:
-            None
-
-        Returns:
-            log (Logger): Logger object with the basic configuration.
-    """
-    FORMAT_LOG = '%(asctime)s %(section)s: %(message)s'
-    logging.basicConfig(format=FORMAT_LOG, filename='logs/log_' + str(dt.date.today())+ '.log', encoding='utf-8')
-    log = logging.getLogger('dev')
-    log.setLevel(logging.DEBUG)
-    return log
-
-
-def get_normalize_data(dataset:pd.DataFrame, column_to_normalize:str, rules:dict) -> pd.DataFrame:
-    """
-    Returns a dataset with a column normalized, used defined rules.
-
-        Parameters:
-            dataset (DataFrame): DataFrame with datset's information.
-            column_to_normalize (str): Name of column to normalize in the dataset
-            rules (dict): A dictionary with normalize information, the form is {'rule_1': {'values': ['EUA', 'US', 'EE. UU'], 'norma': 'Estados Unidos'}}
-
-        Returns:
-            dataset (DataFrame): DataFrame with the normalized column.
-    """
-    if column_to_normalize == '' or len(rules) <= 0:
-        raise ValueError("Column_to_normalize must be in the dataset and rules must be with the form {'rule_1': {'values': ['EUA', 'US', 'EE. UU'], 'norma': 'Estados Unidos'} }")
-    for rule in rules:
-        aux = dataset[column_to_normalize].apply(lambda value: rules[rule]['norma'] if value in rules[rule]['values'] else value)
-        dataset[column_to_normalize] = aux
-    return dataset
-
-
-def get_treatment_of_null_values(dataset:pd.DataFrame) -> pd.DataFrame:
-    """
-    Returns dataset without null fields apply NaN.
-
-        Parameters:
-            dataset (DataFrame): DataFrame with datset's information.
-        
-        Returns:
-            dataset (DataFrame): DataFrame with null fields to NaN. 
-    """
-    dataset = dataset.replace("", "NaN")
-    return dataset
-
-
-def decrease_dimensionality(dataset:pd.DataFrame, innecesary_colums:tuple) -> pd.DataFrame:
-    """
-        Returns a dataset without innesesary columns, reduces the matrix dimensionality.
-
-            Parameters:
-                dataset (DataFrame): DataFrame with datset's information.
-                innecesary_colums (tuple): Tuple of strings, with name of innecesary colums.
-            
-            Returns:
-                dataset (DataFrame): DataFrame without innecesary colums.
-    """
-    if len(innecesary_colums) <= 0:
-        raise ValueError("In decrease_dimensionality is necesary the param innecesary_colums")
-    for colum in innecesary_colums:
-        dataset.pop(colum)
-    return dataset
-
-
-if __name__ == "__main__":
-    log = set_logging_configuration()
-
-    FILENAME = 'assets/Armas_Policias_Mexico'
-
-    try:
-        DATASET = pd.read_csv(FILENAME + '.csv')
-        log.info('Dataset %s cargado correctamente.', FILENAME + '.csv', extra={'section': 'Main'})
-    except FileNotFoundError as e:
-        log.error('Dataset %s no encontrado, verifique si esta bien escrito.', FILENAME + '.csv', extra={'section': 'Main'})
-        print(e)
-
-    try:
-        RULES = {'rule_1': {'values': ['EUA', 'US', 'EE. UU'], 'norma': 'Estados Unidos'}}
-        clean_dataset = get_normalize_data(DATASET, 'Pais_origen_empresa', RULES)
-        log.info('Dataset %s normalizado correctamente', FILENAME + '.csv', extra={'section': 'Main'})
-    except ValueError as e:
-        log.error('Verifique los parametros y la estructura: %s', e, extra={'section': 'get_normalize_data'})
-        print(e)
-    except TypeError as et:
-        log.error('Verifique que los tipos de parametros: %s', e, extra={'section': 'get_normalize_data'})
-        print(e)
-    
-
-    try:
-        INNESESARY_COLUMNS = ('Usuario_agencia_estatal', 'Usuario_municipal?', 'Mes', 'Dia', 'Ano', 'Factura no.', 'Semi_auto_auto_n_a', 'Comentario')
-        clean_dataset = decrease_dimensionality(DATASET, INNESESARY_COLUMNS)
-        log.info('Dataset %s reducido correctamente', FILENAME + '.csv', extra={'section': 'Main'})
-        print(clean_dataset[:50])
-    except ValueError as e:
-        log.error('Verifica el valor %s en "INNESESARY_COLUMNS"', e, extra={'section': 'decrease_dimensionality'})
-        print('Error: ', e)
-    
-    clean_dataset.to_csv(FILENAME + '_clean.csv')
-    log.info('Dataset %s limpio y creado correctamente', FILENAME + '.csv', extra={'section': 'Main'})
+# Leer Dataframe
+dataset=pd.read_csv("Armas_Policias_Mexico.csv")
+# Mostrar dataframe
+print(dataset)
+# Mostrar columnas de dataframe
+print(dataset.head)
+# Mostrar info de dataframe
+dataset.info()
+# Mostrar cantidad de nulos del dataframe
+dataset.isnull().sum()
+# Seleccionar dimensiones
+dataset1=dataset[['Estado','Fecha','Mes','Ano','Marca','Pais_origen_empresa','No_piezas','Costo_Pesos_Mex','Calibre','Tipo']]
+# Mostrar nuevo dataframe
+print(dataset1)
+# Mostrar cantidad de nulos del nuevo dataframe
+dataset1.isnull().sum()
+# Eliminar registros nulos del dataframe
+dataset1.dropna()
+# Mostrar cantidad de nulos del dataframe
+dataset1.isnull().sum().sum()
+# Mostrar información descriptiva del dataframe
+dataset1.describe()
+# Capturar nulos en lista
+null_columns=dataset1.columns[dataset1.isnull().any()]
+# Mostrar nulos enlistados en el dataframe nuevo
+print(dataset1[null_columns].isnull().sum())
+# Limpiar nulos de segundo dataframe
+dataset2=dataset1.dropna(how='any')
+# Mostrar información descriptiva del segundo dataframe
+dataset2.describe()
+# Mostrar cantidad de nulos del segundo dataframe
+dataset2.isnull().sum().sum()
+# Mostrar segundo dataframe
+print(dataset2)
+# Crear dataframe con correlaciones
+dataset2_corr=dataset2.corr()
+# Mostrar correlaciones
+print(dataset2_corr)
+# Definir función para cambiar numero por nombre de mes
+def castMes(diccionario):
+    # Definir diccionario auxiliar
+    dict_aux = {}
+    # Recorrer llaves del diccionario (las llaves son los numeros de los meses)
+    for clave in diccionario:
+        # Agregar al diccionario auxiliar el valor del nombre del mes según el número
+        dict_aux[calendar.month_abbr[int(clave)]] = diccionario[clave]
+    # Retornar diccionario arreglado
+    return dict_aux
+# Definir función para contar registros en un diccionario según sus categorías
+def dictMesesCostos(registros, columna):
+    # C}Definir dccionario de meses
+    meses = {}
+    # Recorrer registros de categorias 
+    for indice, mes in enumerate(registros):
+        # Cambiar valores con comas por enteros
+        dataset2[columna][indice] = int(dataset2[columna][indice].replace(',', ''))
+        # Agregar meses al diccionario con su valor correspondiente
+        if mes not in meses:
+            meses[mes] = dataset2[columna][indice]
+        # Sumar al valor del mes la siguiente cantidad
+        else:
+            meses[mes] += dataset2[columna][indice]
+    # Ordenar registros según el mes
+    mes_ordenados = dict(
+        sorted(meses.items(), key=operator.itemgetter(0), reverse=False)
+    )
+    # Castear el número a nombre del mes
+    mes_ordenados = castMes(mes_ordenados)
+    # Retornar diccionario
+    return mes_ordenados
+# Arreglar indices del dataframe (Después de correciones)
+dataset2=dataset2.reset_index(drop=True)
+# Obtener el diccionario de meses y costos
+df_fixed = dictMesesCostos(registros=dataset2["Mes"], columna="Costo_Pesos_Mex")
+# MOstrar diccionario de meses y costos
+print(df_fixed)
+# Definir gráfica de barras
+plt.bar(range(len(df_fixed)), list(df_fixed.values()), tick_label=list(df_fixed.keys()))
+# Agregar titulo
+plt.title("Costos de armas por mes")
+# Label para X
+plt.xlabel("Meses")
+# Label para Y
+plt.ylabel("Costos")
+# Mostrar gráfica
+plt.show()
