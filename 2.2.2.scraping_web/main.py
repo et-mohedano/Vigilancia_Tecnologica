@@ -115,6 +115,7 @@ while True:
                 "xpath",
                 f"/html/body/div[2]/div[1]/form/div[7]/div/table/tbody/tr[{indice}]/td/table[2]/tbody/tr/td[2]/div/div/table/tbody/tr[{indice_columna}]/td[2]",
             ).text
+        indice_columna += 1
         informacion["Tipo de documento"] = driver.find_element(
                 "xpath",
                 f"/html/body/div[2]/div[1]/form/div[7]/div/table/tbody/tr[{indice}]/td/table[2]/tbody/tr/td[2]/div/div/table/tbody/tr[{indice_columna}]/td[2]",
