@@ -212,4 +212,7 @@ while True:
             Writer.writeheader()
             Writer.writerows(lista_informacion)
         # Terminar ejecución
+        driver.quit()
+        # Cerrar programa
+        print("Proceso finalizado")
         exit()
